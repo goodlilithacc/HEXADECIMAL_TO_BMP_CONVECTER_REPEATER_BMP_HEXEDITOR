@@ -1,0 +1,211 @@
+<html>
+<body style="background-color:grey;color:#ffffff;font-size: 7.6pt;font-family: "Comic Sans MS", "Comic Sans", cursive;">
+<div id="divUI">
+
+	<label><b>Data Transcoder</b></label><br />
+
+	<label>Data to Encode:</label><br />
+	<textarea id="textareaDataToEncode" cols="40" rows="10"></textarea><br />
+
+	<label>From:</label>
+	<select id="selectEncodingFrom">
+		<option>Base64</option>
+		<option>Hexadecimal</option>
+		<option selected>UTF8</option>
+	</select>
+	<label>To:</label>
+	<select id="selectEncodingTo">
+		<option>Base64</option>
+		<option selected>Hexadecimal</option>
+		<option>UTF8</option>
+	</select><br />
+
+	<button onclick="buttonEncode_Clicked();">v Encode v</button>
+	<button onclick="buttonDecode_Clicked();">^ Decode ^</button><br />
+
+	<label>Data Encoded:</label><br />
+	<textarea id="textareaDataEncoded" cols="40" rows="10"></textarea><br />
+
+</div>
+
+<script type="text/javascript">
+
+// ui event handlers
+
+function buttonDecode_Clicked()
+{
+	var selectEncodingFrom = document.getElementById
+	(
+		"selectEncodingFrom"
+	);
+
+	var selectEncodingTo = document.getElementById
+	(
+		"selectEncodingTo"
+	);
+
+	var textareaDataToEncode = document.getElementById
+	(
+		"textareaDataToEncode"
+	);
+
+	var textareaDataEncoded = document.getElementById
+	(
+		"textareaDataEncoded"
+	);
+
+	var encodingNameFrom = selectEncodingFrom.value;
+	var encodingFrom = Encoding.Instances[encodingNameFrom];
+
+	var encodingNameTo = selectEncodingTo.value;
+	var encodingTo = Encoding.Instances[encodingNameTo];
+
+	var dataToEncode = textareaDataEncoded.value;
+	var dataAsBytes = encodingTo.decodeToBytes(dataToEncode);
+	var dataEncoded = encodingFrom.encodeBytes(dataAsBytes);
+
+	textareaDataToEncode.value = dataEncoded;
+}
+
+function buttonEncode_Clicked()
+{
+	var selectEncodingFrom = document.getElementById
+	(
+		"selectEncodingFrom"
+	);
+
+	var selectEncodingTo = document.getElementById
+	(
+		"selectEncodingTo"
+	);
+
+	var textareaDataToEncode = document.getElementById
+	(
+		"textareaDataToEncode"
+	);
+
+	var textareaDataEncoded = document.getElementById
+	(
+		"textareaDataEncoded"
+	);
+
+	var encodingNameFrom = selectEncodingFrom.value;
+	var encodingFrom = Encoding.Instances[encodingNameFrom];
+
+	var encodingNameTo = selectEncodingTo.value;
+	var encodingTo = Encoding.Instances[encodingNameTo];
+
+	var dataToEncode = textareaDataToEncode.value;
+	var dataAsBytes = encodingFrom.decodeToBytes(dataToEncode);
+	var dataEncoded = encodingTo.encodeBytes(dataAsBytes);
+
+	textareaDataEncoded.value = dataEncoded;
+}
+
+// classes
+
+function Encoding(name, decodeToBytes, encodeBytes)
+{
+	this.name = name;
+	this.decodeToBytes = decodeToBytes;
+	this.encodeBytes = encodeBytes;
+}
+{
+	Encoding.Instances = new Encoding_Instances();
+
+	function Encoding_Instances()
+	{
+		this.Base64 = new Encoding
+		(
+			"Base64",
+			function decodeToBytes(dataToDecode)
+			{
+				var dataAsBinaryString = atob(dataToDecode);
+				var dataAsBytes = [];
+				for (var i = 0; i < dataAsBinaryString.length; i++)
+				{
+					var byte = dataAsBinaryString.charCodeAt(i);
+					dataAsBytes.push(byte);
+				}
+				return dataAsBytes;
+			},
+			function encodeBytes(bytesToEncode)
+			{
+				var dataAsBinaryString = "";
+				for (var i = 0; i < bytesToEncode.length; i++)
+				{
+					var byte = bytesToEncode[i];
+					var byteAsChar = String.fromCharCode(byte);
+					dataAsBinaryString += byteAsChar;
+				}
+				var returnValue = btoa(dataAsBinaryString);
+				return returnValue;
+			}
+		);
+
+		this.Hexadecimal = new Encoding
+		(
+			"Hexadecimal",
+			function decodeToBytes(dataToDecode)
+			{
+				var returnValues = []
+				for (var i = 0; i < dataToDecode.length; i += 2)
+				{
+					var byteAsHexadecimal = dataToDecode.substr(i, 2);
+					var byte = parseInt(byteAsHexadecimal, 16);
+					returnValues.push(byte);
+				}
+				return returnValues;
+			},
+			function encodeBytes(bytesToEncode)
+			{
+				var returnValue = "";
+
+				for (var i = 0; i < bytesToEncode.length; i++)
+				{
+					var byte = bytesToEncode[i];
+					var byteAsString = byte.toString(16);
+					returnValue += byteAsString;
+				}
+
+				return returnValue;
+			}
+		);
+
+		this.UTF8 = new Encoding
+		(
+			"UTF8",
+			function decodeToBytes(dataToDecode)
+			{
+				var returnValues = []
+				for (var i = 0; i < dataToDecode.length; i++)
+				{
+					var byte = dataToDecode.charCodeAt(i);
+					returnValues.push(byte);
+				}
+				return returnValues;
+
+			},
+			function encodeBytes(bytesToEncode)
+			{
+				var returnValue = "";
+
+				for (var i = 0; i < bytesToEncode.length; i++)
+				{
+					var byte = bytesToEncode[i];
+					var char = String.fromCharCode(byte);
+					returnValue += char;
+				}
+				return returnValue;
+			}
+		);
+	}
+}
+
+</script>
+
+</body>
+</html>
+<!DOCTYPE html><html lang=en><body style="background-color:grey;color:#fff;font-size:7.6pt;font-family:"Comic Sans MS", "Comic Sans", cursive;"><head><meta charset=UTF-8><meta name=viewport content="width=device-width, initial-scale=1.0"><title>Text Repeater for bmp 180000 Bytes</title></head> <style>button{background-color:white}input{background-color:white}button:hover{background-color:blue}button:focus{background-color:blue}button:active{background-color:blue}button:link{background-color:blue}button:lang{background-color:blue}button:Toggle{background-color:blue}input:hover{background-color:blue}input:focus{background-color:blue}input:active{background-color:blue}input:link{background-color:blue}input:lang{background-color:blue}input:Toggle{background-color:blue}</style><h1>Text Repeater for bmp 180000 Bytes</h1> <br /> <button style=height:50px onclick=scrollBarToTop()> Click here to ScrollTexteHex To Top </button> <script>function scrollBarToTop(){document.getElementById("textinput2").scrollTop=(0,0)}</script> <button style=height:50px onclick=scrollBarToBottom()> Click here to ScrollTexteHex To Bottom </button> <script>function scrollBarToBottom(){var a=document.getElementById("textinput2");a.scrollTop=a.scrollHeight}</script> <br /> <br /> <br />
+ <br /> <textarea id=textinput2 cols=50 rows=9 style="background-color:grey;color:#fff;font-size:7.6pt;font-family:"Comic Sans MS", "Comic Sans", cursive;"></textarea>
+<br /> <span id=CharactersCounter>0</span> Characters Counter <span id=BytesCounter>0</span> Bytes Counter <br /> <input type=button style=height:50px value="360000 divized Input texte Count Rounded Value +1" onclick="document.getElementById('repeat-count').value=Math.round(360000/document.getElementById('textinput2').value.length+1)"><br /> <button id=repeat-btn style=width:100px;height:100px>Repeat</button><br /> <label>Filename:</label> <input id=inputFileName value style="background-color:grey;color:#fff;font-size:7.6pt;font-family:"Comic Sans MS", "Comic Sans", cursive;"><br /> <button style=width:100px;height:100px onclick=buttonBytesSaveToFile_Clicked()>Save Bytes</button><br /> <textarea readonly id=textareaBytesAsHexadecimal cols=20 rows=10 style="background-color:grey;color:#fff;font-size:7.6pt;font-family:"Comic Sans MS", "Comic Sans", cursive;"></textarea> <br /><br /><br /><br /><br /> <a href="javascript:window.location.href=window.location.href"> <input type=button style=height:50px value="Restore The Page"/></a> <script>var textinput2=document.getElementById("textinput2"),CharactersCounter=document.getElementById("CharactersCounter"),BytesCounter=document.getElementById("BytesCounter");textinput2.addEventListener("input",function(){CharactersCounter.textContent=this.value.length;BytesCounter.textContent=CharactersCounter.textContent/2;document.getElementById('textinput2').value = document.getElementById('textinput2').value.replace(/[^0-9A-F]/ig,"").toUpperCase();});</script> <input hidden type=number id=repeat-count placeholder="Enter repeat count" value=360000> <input hidden type=number id=repeat-countchar placeholder="Enter repeat count characters" value=360000> <script>var textInput2=document.getElementById("textinput2"),repeatCount=document.getElementById("repeat-count"),repeatCountchar=document.getElementById("repeat-countchar"),repeatBtn=document.getElementById("repeat-btn"),outputText=document.getElementById("textareaBytesAsHexadecimal");repeatBtn.addEventListener("click",function(){var a=textInput2.value.trim(),c=parseInt(repeatCount.value);if(a&&0<c){for(var b="",d=0;d<c;d++)b+=a;outputText.value=""+b;outputText.value.length>repeatCountchar.value&&(outputText.value=outputText.value.substring(0,repeatCountchar.value))}else alert("Please enter text and repeat count")});</script> <script type=text/javascript>function bytesFromTextarea(){for(var a=document.getElementById("textareaBytesAsHexadecimal").value,c=[],b=a.length,d=0;d<b;d+=2){var e=a.substr(d,2);e=parseInt(e,16);c.push(e)}return c}function buttonBytesSaveToFile_Clicked(){var a=document.getElementById("inputFileName").value,c=bytesFromTextarea();(new FileHelper).saveBytesToFileWithName(c,a)}function FileHelper(){}FileHelper.prototype.saveBytesToFileWithName=function(a,c){for(var b=new ArrayBuffer(a.length),d=new Uint8Array(b),e=0;e<a.length;e++)d[e]=a[e];a=new Blob([b],{type:"application/type"});b=document.createElement("a");b.href=window.URL.createObjectURL(a);b.download=c;b.click()};</script></body></html>
